@@ -7,8 +7,11 @@ import config from '../../config';
 export default async function handler(req, res) {
   console.log('Starting ETL and data compilation process');
 
-  // Path absoluto al archivo de credenciales
-  const credentialsPath = path.join(process.cwd(), 'taller-integracion-310700-41f361102b8b.json');
+  const credentialsPath = path.join(process.cwd(), config.GOOGLE_APPLICATION_CREDENTIALS);
+  if (!fs.existsSync(credentialsPath)) {
+    console.error(`Credentials file not found at ${credentialsPath}`);
+    return res.status(500).json({ error: `Credentials file not found at ${credentialsPath}` });
+  }
 
   const storage = new Storage({
     keyFilename: credentialsPath,
