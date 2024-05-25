@@ -1,5 +1,5 @@
 # dependencies
-my-dashboard/node_modules
+/my-dashboard/node_modules
 
 # Ignorar la carpeta local-data
 /my-dashboard/local-data
