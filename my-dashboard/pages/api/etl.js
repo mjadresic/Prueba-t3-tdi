@@ -8,7 +8,7 @@ export default async function handler(req, res) {
   console.log('Starting ETL and data compilation process');
 
   const storage = new Storage({
-    keyFilename: config.GOOGLE_APPLICATION_CREDENTIALS,
+    keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS, // Asegúrate de que esta variable de entorno esté configurada correctamente
   });
 
   const bucket = storage.bucket(config.BUCKET_NAME);
@@ -70,6 +70,7 @@ export default async function handler(req, res) {
             }));
           } catch (parseError) {
             console.error(`Error parsing file ${file.name}:`, parseError);
+            return res.status(500).json({ error: `Error parsing file ${file.name}: ${parseError.message}` });
           }
         }
       }
