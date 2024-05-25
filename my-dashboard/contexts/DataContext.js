@@ -11,35 +11,57 @@ export const DataProvider = ({ children }) => {
     error: null,
   });
 
+  const fetchData = async () => {
+    try {
+      const ordersRes = await axios.get('/orders.json');
+      const productsRes = await axios.get('/products.json');
+      setData({
+        orders: ordersRes.data,
+        products: productsRes.data,
+        loading: false,
+        error: null,
+      });
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setData({
+        orders: [],
+        products: [],
+        loading: false,
+        error: error.message,
+      });
+    }
+  };
+
+  const compileData = async () => {
+    try {
+      await axios.get('/api/etl');
+      await fetchData();
+    } catch (error) {
+      console.error('Error compiling data:', error);
+      setData({
+        orders: [],
+        products: [],
+        loading: false,
+        error: error.message,
+      });
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
+    const initializeData = async () => {
       try {
-        const ordersRes = await axios.get('/local-data/orders.json');
-        const productsRes = await axios.get('/local-data/products.json');
-        console.log('Orders:', ordersRes.data);
-        console.log('Products:', productsRes.data);
-        setData({
-          orders: ordersRes.data,
-          products: productsRes.data,
-          loading: false,
-          error: null,
-        });
+        await fetchData();
       } catch (error) {
-        console.error('Error fetching data:', error);
-        setData({
-          orders: [],
-          products: [],
-          loading: false,
-          error: error.message,
-        });
+        console.error('Data not found, compiling data:', error);
+        await compileData();
       }
     };
 
-    fetchData();
+    initializeData();
   }, []);
 
   return (
-    <DataContext.Provider value={{ ...data, setData }}>
+    <DataContext.Provider value={{ ...data, setData, compileData }}>
       {children}
     </DataContext.Provider>
   );

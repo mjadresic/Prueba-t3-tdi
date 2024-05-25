@@ -6,7 +6,7 @@ import config from '../../config';
 
 export default async function handler(req, res) {
   console.log('Starting ETL and data compilation process');
-  
+
   const storage = new Storage({
     keyFilename: config.GOOGLE_APPLICATION_CREDENTIALS,
   });
@@ -24,7 +24,7 @@ export default async function handler(req, res) {
 
     for (const file of files) {
       const [data] = await file.download();
-      
+
       if (file.name.includes('products')) {
         const productData = JSON.parse(data.toString());
         products.push(...productData);
@@ -129,10 +129,10 @@ export default async function handler(req, res) {
     }));
 
     console.log('Writing cleaned data to files');
-    fs.writeFileSync(path.join(process.cwd(), 'public', 'local-data', 'products.json'), JSON.stringify(cleanProducts));
-    fs.writeFileSync(path.join(process.cwd(), 'public', 'local-data', 'orders.json'), JSON.stringify(cleanOrders));
+    fs.writeFileSync(path.join(process.cwd(), 'public', 'products.json'), JSON.stringify(cleanProducts));
+    fs.writeFileSync(path.join(process.cwd(), 'public', 'orders.json'), JSON.stringify(cleanOrders));
 
-    console.log('Files written successfully');
+    console.log('Files written successfully to public directory');
 
     // Log a summary of orders grouped by year
     for (const year of Object.keys(ordersByYear)) {

@@ -1,11 +1,10 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { useRouter } from 'next/router';
 import { DataContext } from '../contexts/DataContext';
-import axios from 'axios';
 
 const Home = () => {
   const router = useRouter();
-  const { loading, error, setData } = useContext(DataContext);
+  const { loading, error, compileData } = useContext(DataContext);
   const [isCompiling, setIsCompiling] = useState(false);
 
   const handleButtonClick = (chart) => {
@@ -15,30 +14,7 @@ const Home = () => {
   const handleCompileData = async () => {
     setIsCompiling(true);
     try {
-      // Ejecutar la compilación de archivos
-      const compileRes = await axios.get('/api/etl');
-      console.log('Data compilation process initiated:', compileRes.data);
-
-      // Leer los datos desde los archivos compilados
-      const ordersRes = await axios.get('/local-data/orders.json');
-      const productsRes = await axios.get('/local-data/products.json');
-      console.log('Orders:', ordersRes.data);
-      console.log('Products:', productsRes.data);
-
-      setData({
-        orders: ordersRes.data,
-        products: productsRes.data,
-        loading: false,
-        error: null,
-      });
-    } catch (error) {
-      console.error('Error compiling data:', error);
-      setData({
-        orders: [],
-        products: [],
-        loading: false,
-        error: error.message,
-      });
+      await compileData();
     } finally {
       setIsCompiling(false);
     }
