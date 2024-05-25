@@ -1,0 +1,8 @@
+# dependencies
+/node_modules
+
+# Ignorar la carpeta local-data
+/my-dashboard/local-data
+
+# Ignorar la carpeta public/local-data
+/my-dashboard/public/local-data

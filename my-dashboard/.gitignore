@@ -1,8 +1,0 @@
-# dependencies
-/node_modules
-
-# Ignorar la carpeta local-data
-/local-data
-
-# Ignorar la carpeta public/local-data
-/public/local-data
