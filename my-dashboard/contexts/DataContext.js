@@ -13,8 +13,8 @@ export const DataProvider = ({ children }) => {
 
   const fetchData = async () => {
     try {
-      const ordersRes = await axios.get('/orders_clean.json');
-      const productsRes = await axios.get('/products_clean.json');
+      const ordersRes = await axios.get('/orders.json');
+      const productsRes = await axios.get('/products.json');
       setData({
         orders: ordersRes.data,
         products: productsRes.data,
@@ -34,8 +34,7 @@ export const DataProvider = ({ children }) => {
 
   const compileData = async () => {
     try {
-      await axios.get('/api/download');
-      await axios.get('/api/clean');
+      await axios.get('/api/etl');
       await fetchData();
     } catch (error) {
       console.error('Error compiling data:', error);
