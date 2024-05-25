@@ -1,2 +1,4 @@
 # dependencies
 /my-dashboard/node_modules
+
+/my-dashboard/.next
