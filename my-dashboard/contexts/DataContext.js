@@ -32,9 +32,28 @@ export const DataProvider = ({ children }) => {
     }
   };
 
-  const compileData = async () => {
+  const downloadData = async () => {
+    try {
+      await axios.get('/api/download');
+    } catch (error) {
+      console.error('Error downloading data:', error);
+      throw error;
+    }
+  };
+
+  const etlData = async () => {
     try {
       await axios.get('/api/etl');
+    } catch (error) {
+      console.error('Error running ETL:', error);
+      throw error;
+    }
+  };
+
+  const compileData = async () => {
+    try {
+      await downloadData();
+      await etlData();
       await fetchData();
     } catch (error) {
       console.error('Error compiling data:', error);
