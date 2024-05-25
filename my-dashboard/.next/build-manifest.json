@@ -30,11 +30,6 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/charts/categoria-mas-popular": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/charts/categoria-mas-popular.js"
-    ],
     "/charts/producto-mas-comprado": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",

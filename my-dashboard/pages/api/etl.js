@@ -24,7 +24,7 @@ export default async function handler(req, res) {
 
     for (const file of files) {
       const [data] = await file.download();
-
+      
       if (file.name.includes('products')) {
         const productData = JSON.parse(data.toString());
         products.push(...productData);
@@ -132,7 +132,7 @@ export default async function handler(req, res) {
     fs.writeFileSync(path.join(process.cwd(), 'public', 'products.json'), JSON.stringify(cleanProducts));
     fs.writeFileSync(path.join(process.cwd(), 'public', 'orders.json'), JSON.stringify(cleanOrders));
 
-    console.log('Files written successfully to public directory');
+    console.log('Files written successfully');
 
     // Log a summary of orders grouped by year
     for (const year of Object.keys(ordersByYear)) {
