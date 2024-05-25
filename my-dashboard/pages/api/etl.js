@@ -2,8 +2,8 @@ import { Storage } from '@google-cloud/storage';
 import { parse } from 'csv-parse/sync';
 import fs from 'fs';
 import path from 'path';
+import config from '../../config';
 
-const BUCKET_NAME = '2024-1-tarea-3';
 const GOOGLE_APPLICATION_CREDENTIALS = {
   type: 'service_account',
   project_id: 'taller-integracion-310700',
@@ -14,7 +14,7 @@ const GOOGLE_APPLICATION_CREDENTIALS = {
   auth_uri: 'https://accounts.google.com/o/oauth2/auth',
   token_uri: 'https://oauth2.googleapis.com/token',
   auth_provider_x509_cert_url: 'https://www.googleapis.com/oauth2/v1/certs',
-  client_x509_cert_url: 'https://www.googleapis.com/robot/v1/metadata/x509/acceso-bucket-alumnos-tarea-3%40taller-integracion-310700.iam.gserviceaccount.com',
+  client_x509_cert_url: 'https://www.googleapis.com/robot/v1/metadata/x509/acceso-bucket-alumnos-tarea-3@taller-integracion-310700.iam.gserviceaccount.com',
 };
 
 export default async function handler(req, res) {
@@ -25,7 +25,7 @@ export default async function handler(req, res) {
     credentials: GOOGLE_APPLICATION_CREDENTIALS,
   });
 
-  const bucket = storage.bucket(BUCKET_NAME);
+  const bucket = storage.bucket(config.BUCKET_NAME);
 
   const products = [];
   const ordersByYear = {};
