@@ -13,8 +13,8 @@ export const DataProvider = ({ children }) => {
 
   const fetchData = async () => {
     try {
-      const ordersRes = await axios.get('/orders.json');
-      const productsRes = await axios.get('/products.json');
+      const ordersRes = await axios.get('/orders_clean.json');
+      const productsRes = await axios.get('/products_clean.json');
       setData({
         orders: ordersRes.data,
         products: productsRes.data,
@@ -32,28 +32,10 @@ export const DataProvider = ({ children }) => {
     }
   };
 
-  const downloadData = async () => {
-    try {
-      await axios.get('/api/download');
-    } catch (error) {
-      console.error('Error downloading data:', error);
-      throw error;
-    }
-  };
-
-  const etlData = async () => {
-    try {
-      await axios.get('/api/etl');
-    } catch (error) {
-      console.error('Error running ETL:', error);
-      throw error;
-    }
-  };
-
   const compileData = async () => {
     try {
-      await downloadData();
-      await etlData();
+      await axios.get('/api/download');
+      await axios.get('/api/clean');
       await fetchData();
     } catch (error) {
       console.error('Error compiling data:', error);

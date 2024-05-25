@@ -1,8 +1,8 @@
-// pages/api/download.js
 import { Storage } from '@google-cloud/storage';
+import nextCors from 'nextjs-cors';
 import fs from 'fs';
 import path from 'path';
-import config from '../../config';
+import { parse } from 'csv-parse/sync';
 
 const GOOGLE_APPLICATION_CREDENTIALS = {
   type: 'service_account',
@@ -18,40 +18,57 @@ const GOOGLE_APPLICATION_CREDENTIALS = {
 };
 
 export default async function handler(req, res) {
+  // Habilitar CORS
+  await nextCors(req, res, {
+    methods: ['GET', 'HEAD'],
+    origin: '*',
+    optionsSuccessStatus: 200,
+  });
+
+  console.log('Starting file download process');
+
+  const storage = new Storage({
+    projectId: GOOGLE_APPLICATION_CREDENTIALS.project_id,
+    credentials: GOOGLE_APPLICATION_CREDENTIALS,
+  });
+
+  const bucketName = '2024-1-tarea-3';
+  const bucket = storage.bucket(bucketName);
+
   try {
-    console.log('Starting download process');
-
-    const storage = new Storage({
-      projectId: GOOGLE_APPLICATION_CREDENTIALS.project_id,
-      credentials: GOOGLE_APPLICATION_CREDENTIALS,
-    });
-
-    const bucket = storage.bucket(config.BUCKET_NAME);
-
     console.log('Attempting to retrieve files from bucket');
     const [files] = await bucket.getFiles();
     console.log('Files retrieved from bucket:', files.map(file => file.name));
 
-    // Crea la carpeta de destino si no existe
-    const localDataPath = path.join(process.cwd(), 'local-data');
-    if (!fs.existsSync(localDataPath)) {
-      fs.mkdirSync(localDataPath);
-    }
+    let orders = [];
+    let products = [];
 
-    // Descargar cada archivo
     for (const file of files) {
-      const destFilePath = path.join(localDataPath, file.name.replace(/\//g, '_'));
-      const options = {
-        destination: destFilePath,
-      };
+      const [data] = await file.download();
 
-      await file.download(options);
-      console.log(`File ${file.name} downloaded to ${destFilePath}`);
+      if (file.name.includes('products')) {
+        products = JSON.parse(data.toString());
+        console.log(`File ${file.name} downloaded`);
+      } else if (file.name.includes('orders')) {
+        const ordersData = data.toString();
+        const parsedData = parse(ordersData, {
+          columns: true,
+          skip_empty_lines: true,
+          delimiter: ';',
+        });
+        orders.push(...parsedData);
+        console.log(`File ${file.name} downloaded`);
+      }
     }
 
-    res.status(200).json({ message: 'Files downloaded successfully' });
+    // Write orders and products to JSON files
+    fs.writeFileSync(path.join(process.cwd(), 'public', 'products.json'), JSON.stringify(products, null, 2));
+    fs.writeFileSync(path.join(process.cwd(), 'public', 'orders.json'), JSON.stringify(orders, null, 2));
+
+    console.log('Files written successfully');
+    res.status(200).json({ message: 'File download process completed successfully' });
   } catch (error) {
-    console.error('Error during download process:', error);
+    console.error('Error during file download process:', error);
     res.status(500).json({ error: error.message });
   }
 }
