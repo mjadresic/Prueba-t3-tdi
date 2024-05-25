@@ -7,16 +7,21 @@ import config from '../../config';
 export default async function handler(req, res) {
   console.log('Starting ETL and data compilation process');
 
-  // Verificar si el archivo de credenciales existe
-  const credentialsPath = path.join(process.cwd(), config.GOOGLE_APPLICATION_CREDENTIALS);
-  if (!fs.existsSync(credentialsPath)) {
-    console.error(`Credentials file not found at ${credentialsPath}`);
-    return res.status(500).json({ error: `Credentials file not found at ${credentialsPath}` });
+  let storage;
+  
+  if (process.env.NODE_ENV === 'production') {
+    // En entorno de producción, leer credenciales desde la variable de entorno
+    const credentials = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON);
+    storage = new Storage({ credentials });
+  } else {
+    // En entorno local, leer credenciales desde el archivo
+    const credentialsPath = path.join(process.cwd(), config.GOOGLE_APPLICATION_CREDENTIALS);
+    if (!fs.existsSync(credentialsPath)) {
+      console.error(`Credentials file not found at ${credentialsPath}`);
+      return res.status(500).json({ error: `Credentials file not found at ${credentialsPath}` });
+    }
+    storage = new Storage({ keyFilename: credentialsPath });
   }
-
-  const storage = new Storage({
-    keyFilename: credentialsPath,
-  });
 
   const bucket = storage.bucket(config.BUCKET_NAME);
 
