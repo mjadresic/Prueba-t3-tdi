@@ -2,7 +2,7 @@ import { Storage } from '@google-cloud/storage';
 import { parse } from 'csv-parse/sync';
 import fs from 'fs';
 import path from 'path';
-import config from '../../config';
+import config from '../config';
 import GOOGLE_APPLICATION_CREDENTIALS from '../../taller-integracion-310700-41f361102b8b.json'; // Importación de credenciales
 
 export default async function handler(req, res) {
