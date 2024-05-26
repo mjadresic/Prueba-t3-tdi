@@ -39,11 +39,15 @@ export const DataProvider = ({ children }) => {
   const compileData = async () => {
     try {
       console.log('Compiling data...');
+      // Realizar la solicitud a /api/etl y esperar a que se complete
       await axios.get('/api/etl');
       console.log('Data compiled successfully');
+      
+      // Después de que la compilación de datos esté completa, llamar a fetchData()
       await fetchData();
     } catch (error) {
       console.error('Error compiling data:', error);
+      // Manejar el error y actualizar el estado en consecuencia
       setData({
         orders: [],
         products: [],
@@ -52,6 +56,7 @@ export const DataProvider = ({ children }) => {
       });
     }
   };
+  
   
 
   useEffect(() => {
