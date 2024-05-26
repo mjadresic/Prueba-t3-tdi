@@ -13,14 +13,18 @@ export const DataProvider = ({ children }) => {
 
   const fetchData = async () => {
     try {
+      console.log('Fetching data...');
       const ordersRes = await axios.get('/orders.json');
+      console.log('Orders data:', ordersRes.data);
       const productsRes = await axios.get('/products.json');
+      console.log('Products data:', productsRes.data);
       setData({
         orders: ordersRes.data,
         products: productsRes.data,
         loading: false,
         error: null,
       });
+      console.log('Data fetched successfully');
     } catch (error) {
       console.error('Error fetching data:', error);
       setData({
@@ -31,10 +35,12 @@ export const DataProvider = ({ children }) => {
       });
     }
   };
-
+  
   const compileData = async () => {
     try {
+      console.log('Compiling data...');
       await axios.get('/api/etl');
+      console.log('Data compiled successfully');
       await fetchData();
     } catch (error) {
       console.error('Error compiling data:', error);
@@ -46,6 +52,7 @@ export const DataProvider = ({ children }) => {
       });
     }
   };
+  
 
   useEffect(() => {
     const initializeData = async () => {
