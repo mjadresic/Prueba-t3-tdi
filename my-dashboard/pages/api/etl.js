@@ -22,15 +22,17 @@ export default async function handler(req, res) {
     console.log('Attempting to retrieve files from bucket');
     const [files] = await bucket.getFiles();
     console.log('Files retrieved from bucket:', files.map(file => file.name));
-    console.log("Downloading...");
 
+    // Descargar archivos uno por uno
     for (const file of files) {
+      console.log(`Downloading file: ${file.name}`);
       const [data] = await file.download();
 
+      // Procesar archivo
       if (file.name.includes('products')) {
         const productData = JSON.parse(data.toString());
         products.push(...productData);
-        console.log(`File ${file.name} downloaded`);
+        console.log(`File ${file.name} downloaded and processed`);
       } else if (file.name.includes('orders')) {
         const yearMatch = file.name.match(/orders\/(\d{4})\//);
         if (yearMatch) {
@@ -80,17 +82,17 @@ export default async function handler(req, res) {
 
     console.log('Data parsed successfully');
 
-    // Concatenate all orders from different years into a single array
+    // Concatenar todos los pedidos de diferentes años en un solo array
     const allOrders = Object.values(ordersByYear).flat();
 
-    // Remove duplicate products
+    // Eliminar productos duplicados
     const productSet = new Set();
     const cleanProducts = products.filter(product => {
       if (productSet.has(product.objectID)) {
-        return false; // Skip duplicate
+        return false; // Omitir duplicados
       } else {
         productSet.add(product.objectID);
-        return true; // Keep unique
+        return true; // Mantener único
       }
     }).map(product => ({
       objectID: product.objectID || 'Unknown',
@@ -114,14 +116,14 @@ export default async function handler(req, res) {
       rating: product.rating || 0,
     }));
 
-    // Remove duplicate orders
+    // Eliminar pedidos duplicados
     const orderSet = new Set();
     const cleanOrders = allOrders.filter(order => {
       if (orderSet.has(order.order_id)) {
-        return false; // Skip duplicate
+        return false; // Omitir duplicados
       } else {
         orderSet.add(order.order_id);
-        return true; // Keep unique
+        return true; // Mantener único
       }
     }).map(order => ({
       ...order,
@@ -137,7 +139,7 @@ export default async function handler(req, res) {
 
     console.log('Files written successfully');
 
-    // Log a summary of orders grouped by year
+    // Registrar un resumen de pedidos agrupados por año
     for (const year of Object.keys(ordersByYear)) {
       console.log(`File orders/${year}/* downloaded`);
     }
