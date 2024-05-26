@@ -1,0 +1,2 @@
+root: D:\2024-1\Taller de Integracion\T3\Prueba-t3-tdi\my-dashboard\frontend\nvm
+path: C:\Program Files\nodejs

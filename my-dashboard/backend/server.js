@@ -1,7 +1,7 @@
-import express from 'express';
-import path from 'path';
-import cors from 'cors';
-import etlHandler from './api/etl'; // Asegúrate de que la ruta es correcta
+const express = require('express');
+const path = require('path');
+const cors = require('cors');
+const etlHandler = require('./api/etl');
 
 const app = express();
 
@@ -18,15 +18,12 @@ app.use(cors(corsOptions));
 // Definir la ruta para el manejador de ETL
 app.get('/api/etl', etlHandler);
 
-// Servir archivos estáticos del frontend
-const frontendBuildPath = path.join(__dirname, '..', 'frontend', '.next');
-app.use(express.static(frontendBuildPath));
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(frontendBuildPath, 'index.html'));
-});
+// Servir archivos estáticos del directorio 'public'
+const publicDir = path.join(process.cwd(), 'public');
+app.use('/public', express.static(publicDir));
 
 // Configurar el puerto y escuchar
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);
 });

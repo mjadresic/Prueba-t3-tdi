@@ -1,11 +1,11 @@
-import { Storage } from '@google-cloud/storage';
-import { parse } from 'csv-parse/sync';
-import fs from 'fs';
-import path from 'path';
-import config from '../config';
-import GOOGLE_APPLICATION_CREDENTIALS from '../../taller-integracion-310700-41f361102b8b.json'; // Importación de credenciales
+const { Storage } = require('@google-cloud/storage');
+const { parse } = require('csv-parse/sync');
+const fs = require('fs');
+const path = require('path');
+const config = require('../config');
+const GOOGLE_APPLICATION_CREDENTIALS = require('../taller-integracion-310700-41f361102b8b.json');
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   console.log('Starting ETL and data compilation process');
 
   const storage = new Storage({

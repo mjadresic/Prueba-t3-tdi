@@ -14,9 +14,9 @@ export const DataProvider = ({ children }) => {
   const fetchData = async () => {
     try {
       console.log('Fetching data...');
-      const ordersRes = await axios.get('/orders.json');
+      const ordersRes = await axios.get('http://localhost:3001/public/orders.json');
       console.log('Orders data:', ordersRes.data);
-      const productsRes = await axios.get('/products.json');
+      const productsRes = await axios.get('http://localhost:3001/public/products.json');
       console.log('Products data:', productsRes.data);
       setData({
         orders: ordersRes.data,
@@ -35,11 +35,11 @@ export const DataProvider = ({ children }) => {
       });
     }
   };
-  
+
   const compileData = async () => {
     try {
       console.log('Compiling data...');
-      await axios.get('/api/etl', {
+      await axios.get('http://localhost:3001/api/etl', {
         timeout: 0, // Establece el tiempo de espera en 0 para esperar indefinidamente
       });
       console.log('Data compiled successfully');
@@ -54,9 +54,6 @@ export const DataProvider = ({ children }) => {
       });
     }
   };
-  
-  
-  
 
   useEffect(() => {
     const initializeData = async () => {

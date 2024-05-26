@@ -1,24 +1,19 @@
 {
-    "name": "my-dashboard",
+    "name": "my-dashboard-backend",
     "version": "0.1.0",
     "private": true,
     "scripts": {
-        "dev": "next dev",
-        "build": "next build",
-        "start": "next start",
-        "lint": "next lint"
+      "dev": "nodemon server.js",
+      "start": "node server.js"
     },
     "dependencies": {
-        "@google-cloud/storage": "^5.16.0",
-        "axios": "^0.27.2",
-        "cors": "^2.8.5",
-        "csv-parse": "^5.5.6",
-        "dotenv": "^16.4.5",
-        "moment": "^2.30.1",
-        "next": "^12.1.0",
-        "nextjs-cors": "^2.2.0",
-        "react": "^17.0.2",
-        "react-dom": "^17.0.2",
-        "recharts": "^2.1.10"
+      "@google-cloud/storage": "^5.16.0",
+      "axios": "^0.27.2",
+      "cors": "^2.8.5",
+      "csv-parse": "^5.5.6",
+      "dotenv": "^16.4.5",
+      "express": "^4.17.1",
+      "moment": "^2.30.1"
     }
-}
+  }
+  
