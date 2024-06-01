@@ -21,7 +21,7 @@ const Home = () => {
   };
 
   if (loading || isCompiling) {
-    return <div>Descargando archivos... por favor espere</div>;
+    return <div>Descargando archivos... por favor espere...se demora en cargar pero funciona bien :)</div>;
   }
 
   if (error) {

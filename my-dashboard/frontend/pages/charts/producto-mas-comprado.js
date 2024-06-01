@@ -30,10 +30,10 @@ const ProductoMasComprado = () => {
     // Ordenar los productos por cantidad de compras
     mostBoughtProductsData.sort((a, b) => b.quantity - a.quantity);
 
-    // Limitar a los top 37 productos
-    const top37Products = mostBoughtProductsData.slice(0, 40);
+    // Limitar a los top 40 productos
+    const top40Products = mostBoughtProductsData.slice(0, 40);
 
-    setData(top37Products);
+    setData(top40Products);
   }, [orders, products]);
 
   return (
@@ -48,13 +48,13 @@ const ProductoMasComprado = () => {
           margin={{
             top: 20,
             right: 30,
-            left: 200, // Más espacio para los IDs largos
+            left: 200, // Más espacio para los nombres largos
             bottom: 5,
           }}
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis type="number" domain={[0, 850]} /> {/* Establecer el máximo del eje X a 850 */}
-          <YAxis dataKey="name" type="category" width={200} /> {/* Más espacio para los IDs largos */}
+          <YAxis dataKey="name" type="category" width={200} /> {/* Más espacio para los nombres largos */}
           <Tooltip />
           <Legend />
           <Bar dataKey="quantity" fill="#8884d8" />

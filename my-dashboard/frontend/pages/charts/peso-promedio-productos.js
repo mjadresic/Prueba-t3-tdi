@@ -3,12 +3,12 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, Legend, Responsive
 import { DataContext } from '../../contexts/DataContext';
 
 const PesoPromedioProductos = () => {
-  const { orders } = useContext(DataContext);
+  const { orders, products } = useContext(DataContext);
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    if (orders.length === 0) {
-      console.log('No orders data');
+    if (orders.length === 0 || products.length === 0) {
+      console.log('No orders or products data');
       return;
     }
 
@@ -27,33 +27,41 @@ const PesoPromedioProductos = () => {
     // Crear el array de datos para el gráfico
     const averageWeightData = Object.keys(productWeights).map(key => ({
       product_id: key,
+      name: products.find(product => product.objectID === key)?.name || key,
       average_weight: productWeights[key].totalWeight / productWeights[key].count,
     }));
 
     setData(averageWeightData);
-  }, [orders]);
+  }, [orders, products]);
 
   return (
     <div>
       <h1>Peso promedio de los productos comprados</h1>
       <ResponsiveContainer width="100%" height={800}>
         <BarChart
-          width={800}
+          width={1000}
           height={800}
           data={data}
           margin={{
             top: 20,
             right: 30,
-            left: 200,
-            bottom: 5,
+            left: 20,
+            bottom: 100, // Más espacio para los nombres largos
           }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="product_id" />
+          <XAxis
+            dataKey="name"
+            type="category"
+            angle={-45}
+            textAnchor="end"
+            interval={Math.ceil(data.length / 10)} // Mostrar aproximadamente 10 etiquetas
+            height={150}
+          />
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar dataKey="average_weight" fill="#8884d8" barSize={30} /> {/* Aumentar el tamaño de las barras */}
+          <Bar dataKey="average_weight" fill="#8884d8" barSize={30} />
         </BarChart>
       </ResponsiveContainer>
     </div>
