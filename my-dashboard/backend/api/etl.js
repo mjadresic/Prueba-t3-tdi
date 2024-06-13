@@ -7,10 +7,10 @@ const GOOGLE_APPLICATION_CREDENTIALS = require('../taller-integracion-310700-41f
 
 const correctPaymentType = (type) => {
   const corrections = {
-    'drac tiderc': 'credit_card',
-    'cotelob': 'boleto',
+    'drac_tiderc': 'credit_card',
+    'otelob': 'boleto',
     'rehcuov': 'voucher',
-    'drac tibed': 'debit_card',
+    'drac_tibed': 'debit_card',
   };
   return corrections[type] || type;
 };

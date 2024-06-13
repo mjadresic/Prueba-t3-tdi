@@ -15,8 +15,10 @@ export const DataProvider = ({ children }) => {
     try {
       console.log('Fetching data...');
       const ordersRes = await axios.get('https://tarea-3-mjadresic.onrender.com/public/orders.json');
-      console.log('Orders data:', ordersRes.data);
       const productsRes = await axios.get('https://tarea-3-mjadresic.onrender.com/public/products.json');
+      // const ordersRes = await axios.get('http://localhost:3001/public/orders.json');
+      // const productsRes = await axios.get('http://localhost:3001/public/products.json');
+      console.log('Orders data:', ordersRes.data);
       console.log('Products data:', productsRes.data);
       setData({
         orders: ordersRes.data,
@@ -40,6 +42,7 @@ export const DataProvider = ({ children }) => {
     try {
       console.log('Compiling data...');
       await axios.get('https://tarea-3-mjadresic.onrender.com/api/etl', {
+      //await axios.get('http://localhost:3001/api/etl', {
         timeout: 0, // Establece el tiempo de espera en 0 para esperar indefinidamente
       });
       console.log('Data compiled successfully');
