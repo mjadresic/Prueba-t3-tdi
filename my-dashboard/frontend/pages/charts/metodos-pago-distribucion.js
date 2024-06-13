@@ -2,6 +2,16 @@ import { useContext, useEffect, useState } from 'react';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { DataContext } from '../../contexts/DataContext';
 
+const correctPaymentType = (type) => {
+  const corrections = {
+    'drac tiderc': 'credit_card',
+    'cotelob': 'boleto',
+    'rehcuov': 'voucher',
+    'drac tibed': 'debit_card',
+  };
+  return corrections[type] || type;
+};
+
 const MetodosPagoDistribucion = () => {
   const { orders } = useContext(DataContext);
   const [data, setData] = useState([]);
@@ -14,8 +24,9 @@ const MetodosPagoDistribucion = () => {
 
     // Agrupar y contar las compras por método de pago
     const paymentMethodCounts = orders.reduce((acc, order) => {
-      if (order.payment_type && order.payment_type !== 'unknown') {
-        acc[order.payment_type] = (acc[order.payment_type] || 0) + 1;
+      const correctedPaymentType = correctPaymentType(order.payment_type);
+      if (correctedPaymentType && correctedPaymentType !== 'unknown') {
+        acc[correctedPaymentType] = (acc[correctedPaymentType] || 0) + 1;
       }
       return acc;
     }, {});

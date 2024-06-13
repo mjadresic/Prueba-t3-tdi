@@ -5,6 +5,24 @@ const path = require('path');
 const config = require('../config');
 const GOOGLE_APPLICATION_CREDENTIALS = require('../taller-integracion-310700-41f361102b8b.json');
 
+const correctPaymentType = (type) => {
+  const corrections = {
+    'drac tiderc': 'credit_card',
+    'cotelob': 'boleto',
+    'rehcuov': 'voucher',
+    'drac tibed': 'debit_card',
+  };
+  return corrections[type] || type;
+};
+
+const correctOrderStatus = (status) => {
+  const corrections = {
+    'dereviled': 'delivered',
+    'deppihs': 'shipped',
+  };
+  return corrections[status] || status;
+};
+
 module.exports = async function handler(req, res) {
   console.log('Starting ETL and data compilation process');
 
@@ -48,6 +66,10 @@ module.exports = async function handler(req, res) {
             });
 
             ordersByYear[year].push(...parsedData.map((record, index) => {
+              // Correcciones de campos
+              const correctedOrderStatus = correctOrderStatus(record.order_status);
+              const correctedPaymentType = correctPaymentType(record.payment_type);
+
               return {
                 order_id: record.order_id || `missing_order_id_${index + 1}`,
                 customer_id: record.customer_id || `missing_customer_id_${index + 1}`,
@@ -58,8 +80,8 @@ module.exports = async function handler(req, res) {
                 rating: record.rating ? parseInt(record.rating, 10) : 0,
                 product_category: record.product_category || 'unknown',
                 product_id: record.product_id || 'NULL',
-                payment_type: record.payment_type || 'unknown',
-                order_status: record.order_status || 'unknown',
+                payment_type: correctedPaymentType,
+                order_status: correctedOrderStatus,
                 product_weight_g: record.product_weight_g ? parseFloat(record.product_weight_g.replace(',', '.')) : 0,
                 product_length_cm: record.product_length_cm ? parseFloat(record.product_length_cm.replace(',', '.')) : 0,
                 product_height_cm: record.product_height_cm ? parseFloat(record.product_height_cm.replace(',', '.')) : 0,
